@@ -102,7 +102,7 @@ double adjustHeading(double bearing, double  dTheta){
 
 
 double getHeading(){
-    Wire.beginTransmission(slaveAddress);
+    /*Wire.beginTransmission(slaveAddress);
     Wire.write("A");               //Get Data
     Wire.endTransmission();
     delay(10);                   // 70us delay
@@ -116,7 +116,8 @@ double getHeading(){
     
     currHeading = (headingData[0]*256 + headingData[1])/10;  // Put the MSB and LSB together and divide by 10
   //Serial.println(currHeading);
-    return currHeading;
+    return currHeading;*/
+    return gps.course.deg();
        
 }
 
