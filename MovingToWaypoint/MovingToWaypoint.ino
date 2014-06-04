@@ -64,7 +64,7 @@ void loop() {
 
 void steerUpdate(int input){
   double bearing;
-    bearing = TinyGPSPlus::courseTo(gps.location.lat(),gps.location.lng(),  39.9574, -75.1888);
+    bearing = TinyGPSPlus::courseTo(gps.location.lat(),gps.location.lng(),  39.9572, -75.1885);
   //bearing = 180;
   double dTheta = getHeading();
   double nTheta = adjustHeading(bearing,dTheta);
@@ -73,11 +73,11 @@ void steerUpdate(int input){
     
     if(nTheta > 0 && nTheta < 180){
       servo.write((STEER_CENTERPOINT)-STEER_SCALING*nTheta);
-      delay(15);
+      //delay(15);
     }
     else if(nTheta > 180 && nTheta < 360){
       servo.write((360+STEER_CENTERPOINT)-STEER_SCALING*nTheta); //90-(1/5)*input[1]
-      delay(15);
+      //delay(15);
     }
     
   }
@@ -88,13 +88,13 @@ void steerUpdate(int input){
 double adjustHeading(double bearing, double  dTheta){
   if(dTheta >= bearing){
       newHeading = dTheta - bearing;
-      Serial.println(newHeading);
+      //Serial.println(newHeading);
       return newHeading;
 
     }
     if(bearing > dTheta){
       newHeading = (360-(bearing-dTheta));
-      Serial.println(newHeading);
+      //Serial.println(newHeading);
       return newHeading;
 
     }  
@@ -117,8 +117,10 @@ double getHeading(){
     currHeading = (headingData[0]*256 + headingData[1])/10;  // Put the MSB and LSB together and divide by 10
   //Serial.println(currHeading);
     return currHeading;*/
-    return gps.course.deg();
-       
+    double heading = gps.course.deg();
+    //Serial.println(heading);
+    return heading;
+   
 }
 
 
@@ -132,9 +134,11 @@ void ESC_Arming_Sequence(){
 }
 
 void distanceCheck(){
-  double distance = TinyGPSPlus::distanceBetween(gps.location.lat(),gps.location.lng(),waypoint[target], waypoint[target+1])/1000;
-  if(distance <= 3){
+  double distance = TinyGPSPlus::distanceBetween(gps.location.lat(),gps.location.lng(),39.957, -75.1885)/10;
+  Serial.println(distance);
+  if(distance < 1){
     ESC.write(STOP);
+    Serial.println("**STOP**");
   }
   //if(target+1 == sizeof(waypoint)){
    // ESC.write(STOP);
